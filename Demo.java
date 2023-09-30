@@ -1,45 +1,52 @@
-package advJava;
+import javax.sound.midi.Soundbank;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.awt.*;
-import java.awt.event.*;
+public class demo {
+    // to handle exceptions include throws
+    public static void main(String[] args)
+    {
+        List listOfStrings = new ArrayList<String>();
 
-
-// import java.
-
-class Demo extends Frame implements ActionListener{
-    Button b1, b2, b3, b4;
-    TextField t1, t2;
-    Demo(){
-        b1 = new Button("Green");
-        b2 = new Button("Red");
-        b3 = new Button("Yellow");
-        b4 = new Button("Close");
-        setSize(200, 200);
-        setVisible(true);
-        t1 = new TextField();
-        t2 = new TextField();
-        setBackground(Color.BLUE);
-        setLayout(new FlowLayout());
-        add(b1);add(b2);add(b3);add(b4);add(t1);add(t2);
-        b1.addActionListener(this);
-        b2.addActionListener(this);
-        b3.addActionListener(this);
-        b4.addActionListener(this);
-    }
-
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource() == b1){
-            setBackground(Color.GREEN);
-        }else if (e.getSource() == b2){
-            setBackground(Color.RED);
-        }else if(e.getSource() ==b3){
-            setBackground(Color.YELLOW);
-        }else if(e.getSource() == b4){
-            dispose();
+        BufferedReader bf = null;
+        try {
+            bf = new BufferedReader(
+                    new FileReader("D:\\DSA\\wordFinder\\src\\res\\sample.txt"));
+        } catch (FileNotFoundException e) {
+            System.out.println("");
         }
-    }
 
-    public static void main(String[]args){
-        Demo obj = new Demo();
+        if(bf != null) {
+            String line = null;
+            try {
+                line = bf.readLine();
+                while (line != null) {
+                    listOfStrings.add(line);
+                    line = bf.readLine();
+                }
+            } catch (IOException e) {
+                System.out.println("");
+            }
+        }
+
+        if(bf !=null) {
+            try {
+                bf.close();
+            } catch (IOException e) {
+                System.out.println("");
+            }
+        }
+
+        //String[] array = listOfStrings.toArray(new String[0]);
+
+        System.out.println(listOfStrings);
+
+//        for (String str : listOfStrings) {
+//            System.out.println(str);
+//        }
     }
 }

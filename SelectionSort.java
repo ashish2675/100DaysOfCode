@@ -1,31 +1,38 @@
-package patterns;
 
-import java.util.Arrays;
+class selectionSort
+{
+    void sort(int arr[])
+    {
+        int n = arr.length;
 
-public class SelectionSort {
-    public static void main(String[] args) {
-        int[]arr = {1, 3, 5, 2, 4};
-        sort(arr, 0, arr.length,0);
-        System.out.println(Arrays.toString(arr));
-    }
 
-    static void sort(int [] arr, int start, int end, int max){
-        if(end==0){
-            return;
-        }
-        if(start<end) {
-            if (arr[start] > arr[max]) {
-                sort(arr, start+1, end, start);
-            }else
-                sort(arr, start+1, end, max);
-        }
-        else{
-            swap(arr,max,end-1);
+        for (int i = 0; i < n-1; i++)
+        {
+            int min_idx = i;
+            for (int j = i+1; j < n; j++)
+                if (arr[j] < arr[min_idx])
+                    min_idx = j;
+
+            int temp = arr[min_idx];
+            arr[min_idx] = arr[i];
+            arr[i] = temp;
         }
     }
-    static void swap(int[]arr, int first, int second){
-        int temp = arr[first];
-        arr[first] = arr[second];
-        arr[second] = temp;
+
+    void printArray(int arr[])
+    {
+        int n = arr.length;
+        for (int i=0; i<n; ++i)
+            System.out.print(arr[i]+" ");
+        System.out.println();
+    }
+
+    public static void main(String args[])
+    {
+        selectionSort ob = new selectionSort();
+        int arr[] = {64,25,12,22,11};
+        ob.sort(arr);
+        System.out.println("Sorted array");
+        ob.printArray(arr);
     }
 }

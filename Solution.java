@@ -1,47 +1,30 @@
-//public class Solution {
-//    public static void main(String[] args) {
-//        System.out.println(reachNumber(5));
-//    }
-//    public static int reachNumber(int target) {
-//        target = Math.abs(target);
-//        int step = 0;
-//        int sum = 0;
-//        while (sum < target) {
-//            step++;
-//            sum += step;
-//        }
-//        while ((sum - target) % 2 != 0) {
-//            step++;
-//            sum += step;
-//        }
-//        return step;
-//    }
-//}
-
-
-
+package backtracking;
 class Solution {
     public static void main(String[] args) {
-    int[] arr = new int[]{1,3,5,6};
-    int ans = searchInsert(arr, 7);
-        System.out.println(ans);
+        System.out.println(lengthOfLastWord("a "));
     }
-    public static int searchInsert(int[] nums, int target) {
-        // int i=0;
-        // int ans=0;
-//        int ans=0;
-        int start= 0;
-        int end = nums.length-1;
-        while(start <= end){
-            int mid = start+(end-start)/2;
-            if(target == nums[mid]){
-                return mid;
-            }else if(target < nums[mid]){
-                end = mid-1;
-            }else{
-                start = mid + 1;
-            }
+    public static int lengthOfLastWord(String s) {
+        int count = 0;
+
+
+        if(s.length() == 1){
+            count = 1;
         }
-        return start;
+
+        for (int i = s.length()-1; i >=0; i--){
+
+            if(s.charAt(i) != ' ' ){
+                count++;
+                if(i > 0 && s.charAt(i-1) == ' '){
+                    break;
+                }
+            }
+
+
+            // else if(s.charAt(i) == ' '){
+            //     break;
+            // }
+        }
+        return count;
     }
 }

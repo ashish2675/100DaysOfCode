@@ -1,4 +1,5 @@
 //nt
+class Solution {
     public int maximumUnits(int[][] boxTypes, int truckSize) {
         int[] count = new int[1001];
         for (int[] box : boxTypes) {
@@ -17,3 +18,4 @@
         }
         return boxes;
     }
+}

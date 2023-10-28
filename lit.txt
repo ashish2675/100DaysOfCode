@@ -1,0 +1,511 @@
+Simple text editor
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class rough {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int q = scanner.nextInt();
+        scanner.nextLine();
+        String[] ops = new String[q];
+        for (int i = 0; i < q; i++) {
+            ops[i] = scanner.nextLine();
+        }
+        Stack<String> stack = new Stack<>();
+        String s = "";
+        for (int i = 0; i < q; i++) {
+            if (ops[i].charAt(0) == '1') {
+                s = s + ops[i].substring(2);
+                stack.push(s);
+            } else if (ops[i].charAt(0) == '2') {
+                s = s.substring(0, s.length() - Integer.parseInt(ops[i].split(" ")[1]));
+                stack.push(s);
+            } else if (ops[i].charAt(0) == '3') {
+                System.out.println(s.charAt(Integer.parseInt(ops[i].split(" ")[1]) - 1));
+            } else {
+                stack.pop();
+                if (!stack.empty()) {
+                    s = stack.peek();
+                } else {
+                    s = "";
+                }
+            }
+        }
+    }
+}
+
+
+Grid challenfe
+
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+
+    public static String gridChallenge(List<String> grid) {
+        char[][] arr = new char[grid.size()][grid.get(0).length()];
+        for(int i=0;i<grid.size(); i++){
+            char[] word = grid.get(i).toCharArray();
+            Arrays.sort(word);
+            for(int j=0; j<word.length; j++){
+                arr[i][j] = word[j];
+            }
+        }
+        for(int col=0; col<arr[0].length; col++){
+            for(int row=0; row<grid.size()-1; row++){
+                if(arr[row][col] > arr[row+1][col]){
+                    return "NO";
+                }
+            }
+        }
+        return "YES";
+    }    
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int t = Integer.parseInt(bufferedReader.readLine().trim());
+
+        IntStream.range(0, t).forEach(tItr -> {
+            try {
+                int n = Integer.parseInt(bufferedReader.readLine().trim());
+
+                List<String> grid = IntStream.range(0, n).mapToObj(i -> {
+                    try {
+                        return bufferedReader.readLine();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                })
+                    .collect(toList());
+
+                String result = Result.gridChallenge(grid);
+
+                bufferedWriter.write(result);
+                bufferedWriter.newLine();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
+
+Divisible Sum Pairs
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int k = in.nextInt();
+        int a[] = new int[n];
+        for(int a_i=0; a_i < n; a_i++){
+            a[a_i] = in.nextInt();
+        }
+        int cnt=0;
+        for (int i = 0 ;i<n-1;i++) {
+            for (int j=i+1;j<n;j++) {
+                if ((a[i]+a[j]) % k == 0)
+                    cnt ++;
+            }
+        }
+        System.out.println(cnt);
+    }
+}
+
+
+No Prefix Set
+
+import java.io.*;
+import java.util.*;
+
+public class Trie {
+
+    private static final int ALPHABET_SIZE = 26;
+
+	class Node {
+	    
+	    Node[] edges;
+	    char key;
+	    int wordCount = 0;
+	    int prefixCount = 0;
+	    
+	    Node(char key) {
+	        this.key = key;
+	        this.edges = new Node[ALPHABET_SIZE];
+	    }
+	    
+	    boolean has(char key) {
+	        return get(key) != null;
+	    }
+	    
+	    Node get(char key) {
+    	    return edges[getKey(key)];
+	    }
+	    
+	    void put(char key, Node node) {
+	        this.edges[getKey(key)] = node;
+	    }
+	    
+	    char getKey(char ch) {
+	        return (char) (ch - 'a');
+	    }
+	    
+	}
+		
+	private Node root = new Node('\0');
+	
+	public boolean insert(String word) {
+	    return insert(word, root);
+	}
+	
+	private boolean insert(String word, Node root) {
+    	root.prefixCount++;
+        if (word.length() >= 0 && root.wordCount > 0) {
+            return false;
+        }
+	    if (word.length() == 0) {
+	        if (root.prefixCount > 1) {
+	            return false;
+	        }
+	    	root.wordCount++;	    	
+	    	return true;
+	    }	    
+	    char ch = word.charAt(0);
+	    Node next = root.get(ch);	    
+	    if (next == null) {
+	        next = new Node(ch);	        
+	        root.put(ch, next);
+	    }	    
+	    return insert(word.substring(1), next);	    
+	}	
+	
+	public static void main(String[] args) throws IOException {		
+	
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		PrintWriter out = new PrintWriter(new BufferedOutputStream(System.out));		
+		
+		Trie trie = new Trie();        
+        int n = Integer.parseInt(in.readLine());
+        
+        boolean bad = false;
+        while (n-- > 0) {
+            String word = in.readLine();  
+            bad = !trie.insert(word);            
+            if (bad) {
+                out.println("BAD SET\n"+word);    
+                break;
+            }
+        }
+        
+
+        if (!bad) {
+            out.println("GOOD SET");
+        }        
+        out.close();
+		
+	}	
+	
+}
+
+
+Migratory Birds problem
+
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        int n = in.nextInt();
+        int[] types = new int[n];
+        for(int types_i=0; types_i < n; types_i++){
+            types[types_i] = in.nextInt();
+        }
+        // your code goes here
+        
+        Map<Integer, Long> typesToCountMap = IntStream.of(types).
+                boxed().
+                collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+
+        Long maxCount = typesToCountMap.values().stream().
+                max(Comparator.naturalOrder()).
+                get();
+
+        List<Integer> typeWithMaxCount = typesToCountMap.entrySet().stream().
+                filter(item -> Objects.equals(item.getValue(), maxCount)).
+                map(Map.Entry::getKey).
+                collect(Collectors.toList());
+        System.out.println(typeWithMaxCount.get(0));
+    }
+}
+
+
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+    /*
+     * Complete the 'cookies' function below.
+     *
+     * The function is expected to return an INTEGER.
+     * The function accepts following parameters:
+     *  1. INTEGER k
+     *  2. INTEGER_ARRAY A
+     */
+    public static int cookies(int k, List<Integer> A) {
+        // Write your code here
+        int cnt = 0;
+
+        while (true) {
+            boolean allbigger = true;
+            int min = Integer.MAX_VALUE, min2 = Integer.MAX_VALUE;
+            for (int i = 0; i < A.size(); i++) {
+                if (allg && A.get(i).intValue() < k) {
+                    allbigger = false;
+                }
+                if (A.get(i).intValue() < min) {
+                    min2 = min;
+                    min = A.get(i).intValue();
+                }
+                else if (A.get(i).intValue() < min2) {
+                    min2 = A.get(i).intValue();
+                }
+            }
+            if (allbigger) 
+              return cnt;
+            int val = min + 2 * min2;
+            if (val < min2) 
+              return -1;
+            A.remove(Integer.valueOf(min));
+            A.remove(Integer.valueOf(min2));
+            A.add(Integer.valueOf(val));
+            cnt++;
+        }
+
+        return cnt;
+    }
+}
+
+Contest 
+
+Egg
+
+public class GFG {
+
+	
+	static int eggDrop(int n, int k)
+	{
+
+		if (k == 1 || k == 0)
+			return k;
+
+
+		if (n == 1)
+			return k;
+
+		int min = Integer.MAX_VALUE;
+		int x, res;
+
+		
+		for (x = 1; x <= k; x++) {
+			res = Math.max(eggDrop(n - 1, x - 1),
+						eggDrop(n, k - x));
+			if (res < min)
+				min = res;
+		}
+
+		return min + 1;
+	}
+
+	
+	public static void main(String args[])
+	{
+		int n = 2, k = 10;
+		System.out.print("Minimum number of "
+						+ "trials in worst case with " + n
+						+ " eggs and " + k + " floors is "
+						+ eggDrop(n, k));
+	}
+
+}
+
+
+Linked List
+
+
+import java.util.*;
+
+class GFG {
+
+
+	static class Node {
+		int key;
+		Node next;
+	};
+
+	
+	static Node reverseList(Node head)
+	{
+
+		if (head.next == null)
+			return head;
+
+		Node rest = reverseList(head.next);
+		head.next.next = head;
+		head.next = null;
+
+		return rest;
+	}
+
+	
+	static Node sortedMerge(Node a, Node b)
+	{
+
+		
+		a = reverseList(a);
+
+		
+		b = reverseList(b);
+
+		
+		Node head = null;
+
+		Node temp;
+
+	
+		while (a != null && b != null) {
+
+
+			if (a.key >= b.key) {
+
+				
+				temp = a.next;
+
+				a.next = head;
+
+				head = a;
+
+
+				a = temp;
+			}
+
+
+			else {
+
+				temp = b.next;
+				b.next = head;
+				head = b;
+				b = temp;
+			}
+		}
+
+
+		while (a != null) {
+
+			temp = a.next;
+			a.next = head;
+			head = a;
+			a = temp;
+		}
+
+		
+		while (b != null) {
+
+			temp = b.next;
+			b.next = head;
+			head = b;
+			b = temp;
+		}
+
+
+		return head;
+	}
+
+
+	static void printList(Node Node)
+	{
+		while (Node != null) {
+			System.out.print(Node.key + " ");
+			Node = Node.next;
+		}
+	}
+
+
+	static Node newNode(int key)
+	{
+		Node temp = new Node();
+		temp.key = key;
+		temp.next = null;
+		return temp;
+	}
+
+	
+	public static void main(String[] args)
+	{
+		
+		Node res = null;
+
+		
+		Node a = newNode(5);
+		a.next = newNode(10);
+		a.next.next = newNode(15);
+		a.next.next.next = newNode(40);
+
+		Node b = newNode(2);
+		b.next = newNode(3);
+		b.next.next = newNode(20);
+
+		
+		res = sortedMerge(a, b);
+
+		System.out.println("Merged Linked List is:");
+		printList(res);
+	}
+}

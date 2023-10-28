@@ -1,0 +1,19 @@
+class Solution {
+    public int minimumJumps(int[] forbidden, int a, int b, int x) {
+        Set<Integer> blocked =  Arrays.stream(forbidden).boxed().collect(Collectors.toSet());
+        final int MAX_POSITION = 6001, BACKWARD = 2;
+        long[][] memo = new long[MAX_POSITION][BACKWARD];
+        for(long[] row: memo) Arrays.fill(row, -1);
+        long minJumps = getMinJumps(0, 0, a, b, x, blocked, memo);
+        return minJumps >= Integer.MAX_VALUE ? - 1 : (int) minJumps;
+    }
+
+    private long getMinJumps(int pos, int back, int f, int b, int home, Set<Integer> blocked, long[][] memo) {
+        if(pos == home) return 0;
+        if(pos < 0 || pos > 6000 || blocked.contains(pos) || back >= 2) return Integer.MAX_VALUE;
+        if(memo[pos][back] != -1) return memo[pos][back];
+        memo[pos][back] = 1L + getMinJumps(pos + f, 0, f, b, home, blocked, memo);
+        if(back == 0) memo[pos][back] = Math.min(memo[pos][back], 1L + getMinJumps(pos - b, 1, f, b, home, blocked, memo));
+        return memo[pos][back];
+    }
+}

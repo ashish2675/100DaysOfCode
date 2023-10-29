@@ -1,9 +1,16 @@
 //nt
 class Solution {
     public int climbStairs(int n) {
-        if (n == 0 || n == 1) {
-            return 1;
+        if (n <= 3) return n;
+
+        int left = 0;
+        int right = 1;
+        for (int i = 0; i < n; i++) {
+            int temp = right;
+            right = left + right;
+            left = temp;
         }
-        return climbStairs(n-1) + climbStairs(n-2);
+        
+        return right;
     }
 }
